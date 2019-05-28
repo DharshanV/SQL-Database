@@ -94,7 +94,8 @@ void ordered_insert(T data[], int& n,const T& entry)
 	}
 	else {
 		while (index >= 0 && data[index] > entry) {
-			T temp = data[index];
+			T temp;
+			temp = data[index];
 			data[index + 1] = temp;
 			index--;
 		}

@@ -34,8 +34,9 @@ struct MMPair {
 		}
 		return *this;
 	}
-	MMPair<K, V>& operator = (int other) {
-		key = other;
+	MMPair<K, V>& operator = (const MMPair<K,V>& other) {
+		key = other.key;
+		this->value = other.value;
 		return *this;
 	}
 };

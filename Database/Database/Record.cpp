@@ -21,7 +21,6 @@ long Record::write(fstream& outs)
 {
 	//write to the end of the file.
 	long pos = outs.tellp();
-
 	outs.seekg(0, ios_base::end);
 	outs.write(reinterpret_cast<char*>(buffer), sizeof(buffer));
 	return pos;
@@ -89,8 +88,17 @@ void save_list(Record list[], int count)
 {
 	fstream f;
 	open_fileW(f, "record_list.bin");
+	vector<long> index;
 	for (int i = 0; i < count; i++) {
-		list[i].write(f);
+		index.push_back(list[i].write(f)/sizeof(list[0].buffer));
+	}
+	f.close();
+	f = fstream();
+	open_fileRW(f, "record_list.bin");
+	for (int i = 0; i < index.size(); i++) {
+		Record r;
+		r.read(f, index[i]);
+		cout << r << endl;
 	}
 	f.close();
 }

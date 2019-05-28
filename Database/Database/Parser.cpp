@@ -35,7 +35,7 @@ MMap<string, string> Parser::parse_tree()
 				tree["TABLE_NAME"] += input_q[i];
 			}
 			else {
-				tree["VALUE"] += input_q[i];
+				tree["VALUES"] += input_q[i];
 			}
 			break;
 		case 5:
@@ -52,7 +52,7 @@ MMap<string, string> Parser::parse_tree()
 				cout << "INVALID COMMAND" << endl;
 				return tree;
 			}
-			tree["VALUE"] += value;
+			tree["VALUES"] += value;
 			break;
 		case 13:
 			if (!extractValue(tree, i, value)) {

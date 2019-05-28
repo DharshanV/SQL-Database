@@ -242,6 +242,7 @@ template<typename T>
 void BPlusTree<T>::clear_tree()
 {
 	if (this->is_leaf()) {
+		child_count = 0;
 		return;
 	}
 	else {
@@ -255,6 +256,7 @@ void BPlusTree<T>::clear_tree()
 	for (int i = 0; i < child_count; i++) {
 		subset[i] = NULL;
 	}
+	child_count = 0;
 }
 
 template<typename T>

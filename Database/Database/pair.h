@@ -33,8 +33,9 @@ struct Pair {
 	{
 		return lhs;
 	}
-	Pair<K, V>& operator = (int other) {
-		key = other;
+	Pair<K, V>& operator = (const Pair<K,V>& other) {
+		key = other.key;
+		this->value = other.value;
 		return *this;
 	}
 	Pair<K, V>& operator += (const Pair<K, V>& other) {

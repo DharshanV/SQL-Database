@@ -140,20 +140,6 @@ void recordTest() {
 	Record list[] = { data[0],data[1] };
 	//print_list(list, 2);
 	save_list(list, 2);
-
-	Record r;
-	fstream f;
-	open_fileRW(f, "record_list1.bin");
-	/*vector<string> data2 = { {"Dharshan","vish","cs","18"} };*/
-	vector<string> v;
-	v.push_back(string("hello"));
-	v.push_back(string("goodbye"));
-	Record r5(v);
-	cout << endl << "here is r5: " << endl << r5 << endl;
-	//long pos = r5.write(f);
-	//long recno = pos / sizeof(r5.buffer);
-	r5.read(f, 0);
-	cout << "after reading. r5: " << endl << r5 << endl;
 	return;
 }
 
