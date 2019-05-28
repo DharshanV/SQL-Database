@@ -14,7 +14,7 @@ template <class T>
 int index_of_maximal(T data[], int n);                 //return index of the largest item in data
 
 template <class T>
-void ordered_insert(T data[], int& n, T entry);        //insert entry into the sorted array
+void ordered_insert(T data[], int& n,const T& entry);        //insert entry into the sorted array
 														//data with length n
 template <class T>
 int first_ge(const T data[], int n, const T& entry);   //return the first element in data that is
@@ -86,16 +86,21 @@ int index_of_maximal(T data[], int n)
 }
 
 template<class T>
-void ordered_insert(T data[], int& n, T entry)
+void ordered_insert(T data[], int& n,const T& entry)
 {
     int index = n-1;
-    while(data[index]>entry && index >=0){
-        T temp = data[index];
-        data[index+1] = temp;
-        index--;
-    }
-    data[index+1] = entry;
-    n++;
+	if (index < 0) {
+		data[0] = entry;
+	}
+	else {
+		while (index >= 0 && data[index] > entry) {
+			T temp = data[index];
+			data[index + 1] = temp;
+			index--;
+		}
+		data[index + 1] = entry;
+	}
+	n++;
 }
 
 template<class T>

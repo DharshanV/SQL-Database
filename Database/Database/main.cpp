@@ -1,13 +1,13 @@
 #include <iostream>
-#include <vector>
-#include "STokenizer.h"
-#include "MMap.h"
-#include "map.h"
-#include "Parser.h"
-#include "Record.h"
 #include "testFunctions.h"
+#include "Table.h"
 using namespace std;
 
 int main() {
+	string testInputs = "create table student fields last, first, major";
+	Parser parser(testInputs);
+	MMap<string, string> tree = parser.parse_tree();
+	//cout << tree << endl;
+	Table table(tree["TABLE_NAME"][0],tree["FIELD_NAME"]);
 	return 0;
 }

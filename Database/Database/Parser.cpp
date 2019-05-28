@@ -15,7 +15,6 @@ Parser::~Parser()
 
 MMap<string, string> Parser::parse_tree()
 {
-	cout <<"Vector: "<< input_q << endl;
 	MMap<string, string> tree;
 	int rowIndex = 0;
 	int colIndex = 0;
