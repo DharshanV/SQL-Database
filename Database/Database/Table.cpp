@@ -21,9 +21,9 @@ Table::~Table()
 
 void Table::create()
 {
-	ofstream out;
-	out.open(tableName + fieldExt);
-	if (out.fail()) cout << "failed to open file" << endl;
+	fstream f;
+	open_fileRW(f, (tableName + fieldExt).c_str());
+	if (f.fail()) cout << "failed to open file" << endl;
 	string output;
 	output += to_string(fields.size());
 	output += "\n";
@@ -32,16 +32,25 @@ void Table::create()
 		output += "\n";
 		indices.insert(fields[i], MMap<string, long>());
 	}
-	out.close();
+	f << output;
+	f.close();
 }
 
 void Table::open()
 {
+	//fstream f;
+	//open_fileRW(f, (tableName + binaryExt).c_str());
+	//f.close();
+	//f = fstream();
+	//open_fileRW(f, (tableName + fieldExt).c_str());
+	//f.close();
 	ofstream out;
-	out.open(tableName + binaryExt);
+	out.open((tableName + binaryExt));
+	out.clear();
 	out.close();
 	out = ofstream();
-	out.open(tableName + fieldExt);
+	out.open((tableName + fieldExt));
+	out.clear();
 	out.close();
 }
 
@@ -49,14 +58,14 @@ void Table::insert(const vector<string>& data)
 {
 	fstream f;
 	string name = tableName + binaryExt;
-	open_fileW(f, name.c_str());
+	open_fileRW(f, name.c_str());
 	Record r(data);
 	long fileIndex = r.write(f);
 	for (int i = 0; i < fields.size(); i++) {
 		indices[fields[i]][data[i]] += fileIndex;
 	}
-	f.close();
 	cout << indices << endl;
+	f.close();
 	f = fstream();
 	open_fileRW(f, name.c_str());
 	for (int i = 0; i < data.size(); i++) {

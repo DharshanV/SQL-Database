@@ -20,8 +20,8 @@ Record::Record(const vector<string>& data)
 long Record::write(fstream& outs)
 {
 	//write to the end of the file.
-	long pos = outs.tellp();
 	outs.seekg(0, ios_base::end);
+	long pos = outs.tellp()/sizeof(buffer);
 	outs.write(reinterpret_cast<char*>(buffer), sizeof(buffer));
 	return pos;
 }
