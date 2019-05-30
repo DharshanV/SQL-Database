@@ -123,6 +123,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Record.cpp" />
+    <ClCompile Include="SQL.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="STokenizer.cpp" />
     <ClCompile Include="Table.cpp" />
@@ -140,6 +141,7 @@
     <ClInclude Include="Parser.h" />
     <ClInclude Include="random.h" />
     <ClInclude Include="Record.h" />
+    <ClInclude Include="SQL.h" />
     <ClInclude Include="StateMachine.h" />
     <ClInclude Include="STokenizer.h" />
     <ClInclude Include="Table.h" />
