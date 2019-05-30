@@ -1,14 +1,20 @@
 #include "Table.h"
 
+Table::Table()
+{
+}
+
 Table::Table(const string& tableName)
 {
-	this->tableName = tableName;
+	this->tableName += "Data\\";
+	this->tableName += tableName;
 	open();
 }
 
 Table::Table(const string& tableName, const vector<string>& fields)
 {
-	this->tableName = tableName;
+	this->tableName += "Data\\";
+	this->tableName += tableName;
 	this->fields = fields;
 	open();
 	create();
@@ -21,20 +27,7 @@ Table::~Table()
 
 void Table::create()
 {
-	ofstream out(tableName + fieldExt);
-	string output;
-	output += to_string(fields.size());
-	output += "\n";
-	for (int i = 0; i < fields.size(); i++) {
-		output += fields[i];
-		output += "\n";
-		indices.insert(fields[i], MMap<string, long>());
-	}
-	out << output;
-	out.close();
-	//fstream f;
-	//open_fileW(f, (tableName + fieldExt).c_str());
-	//if (f.fail()) cout << "failed to open file" << endl;
+	//ofstream out(tableName + fieldExt);
 	//string output;
 	//output += to_string(fields.size());
 	//output += "\n";
@@ -43,27 +36,40 @@ void Table::create()
 	//	output += "\n";
 	//	indices.insert(fields[i], MMap<string, long>());
 	//}
-	//cout << output << endl;
-	//f << output;
-	//f.close();
+	//out << output;
+	//out.close();
+	fstream f;
+	open_fileRW(f, (tableName + fieldExt).c_str());
+	if (f.fail()) cout << "failed to open file" << endl;
+	string output;
+	output += to_string(fields.size());
+	output += "\n";
+	for (int i = 0; i < fields.size(); i++) {
+		output += fields[i];
+		output += "\n";
+		fieldIndex[fields[i]] = i;
+		indices.insert(fields[i], MMap<string, long>());
+	}
+	f << output;
+	f.close();
 }
 
 void Table::open()
 {
-	//fstream f;
-	//open_fileRW(f, (tableName + binaryExt).c_str());
-	//f.close();
-	//f = fstream();
-	//open_fileRW(f, (tableName + fieldExt).c_str());
-	//f.close();
-	ofstream out;
-	out.open((tableName + binaryExt));
-	out.clear();
-	out.close();
-	out = ofstream();
-	out.open((tableName + fieldExt));
-	out.clear();
-	out.close();
+	fstream f;
+	open_fileRW(f, (tableName + binaryExt).c_str());
+	f.close();
+	f = fstream();
+	open_fileRW(f, (tableName + fieldExt).c_str());
+	f.close();
+	//ofstream out;
+	//out.open((tableName + binaryExt));
+	//out.clear();
+	//out.close();
+	//out = ofstream();
+	//out.open((tableName + fieldExt));
+	//out.clear();
+	//out.close();
 }
 
 void Table::insert(const vector<string>& data)
@@ -91,6 +97,7 @@ void Table::insert(const vector<string>& data)
 
 void Table::selectAll()
 {
+	cout << "Select All" << endl;
 	fstream f;
 	open_fileRW(f, (tableName + binaryExt).c_str());
 	Record r;
@@ -98,6 +105,8 @@ void Table::selectAll()
 	while (f.good()) {
 		r.read(f, i);
 		if (f.eof())break;
+		cout << "=================" << endl;
+		cout << "Record number: " << i << endl;
 		cout << r << endl;
 		i++;
 	}
@@ -106,19 +115,23 @@ void Table::selectAll()
 
 void Table::select(const vector<string>& fields)
 {
+	cout << "Select: " << fields << endl;
 	fstream f;
 	open_fileRW(f, (tableName + binaryExt).c_str());
 	if (f.fail()) return;
-
-	for (int i = 0; i < fields.size(); i++) {
-		if (!indices.contains(fields[i])) return;
-		MMap<string, long>* mapPtr = &indices[fields[i]];
-		MMap<string, long>::Iterator it;
-		for (it = mapPtr->begin(); it != mapPtr->end(); it++) {
-			MMPair<string, long>* pairPtr = &(*it);
-			vector<long>* vectorPtr = &pairPtr->value;
-			Record r;
-			//r.read(f, pairPtr->value[pairPtr->key]);
+	Record r;
+	int recordNo = 0;
+	cout << "**********************" << endl;
+	while (f.good()) {
+		r.read(f, recordNo);
+		if (f.eof())break;
+		cout << "Record number: " << recordNo << endl;
+		for (int i = 0; i < fields.size(); i++) {
+			int fieldI = fieldIndex[fields[i]];
+			cout << fields[i] << ": " << r.buffer[fieldI] << endl;
 		}
+		cout << endl;
+		recordNo++;
 	}
+	f.close();
 }
