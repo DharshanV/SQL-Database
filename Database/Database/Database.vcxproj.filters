@@ -94,5 +94,8 @@
     <Text Include="inputs.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="inputs2.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

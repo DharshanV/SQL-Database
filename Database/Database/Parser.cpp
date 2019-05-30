@@ -52,14 +52,6 @@ MMap<string, string> Parser::parse_tree()
 				cout << "INVALID COMMAND" << endl;
 				return tree;
 			}
-			tree["VALUES"] += value;
-			break;
-		case 13:
-			if (!extractValue(tree, i, value)) {
-				cout << "INVALID COMMAND" << endl;
-				return tree;
-			}
-			tree["FIELD_NAME"] += value;
 			break;
 		case -1:
 			cout << "INVALID COMMAND" << endl;
@@ -71,6 +63,22 @@ MMap<string, string> Parser::parse_tree()
 		rowIndex = table[rowIndex][colIndex];
 	}
 	return tree;
+}
+
+Keyword Parser::commandType()
+{
+	switch (indexMap[input_q[0]])
+	{
+	case SELECT:
+		return SELECT;
+	case CREATE:	//or MAKE
+		return CREATE;
+	case INSERT:
+		return INSERT;
+	default:
+		return ZERO;
+		break;
+	}
 }
 
 void Parser::makeTable()
@@ -153,6 +161,7 @@ bool Parser::extractValue(MMap<string, string>& tree, int& index,string& value)
 		if(i+1!=stopIndex) value += " ";
 	}
 	index = stopIndex;
+	tree["VALUES"] += value;
 	return true;
 }
 

@@ -18,7 +18,7 @@ public:
 	void open();
 	void insert(const vector<string>& data);
 	void selectAll();
-	void select(const string& condition);
+	void select(const vector<string>& fields);
 private:
 	string tableName;
 	vector<string> fields;

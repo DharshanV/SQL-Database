@@ -15,6 +15,7 @@ public:
 	Parser(const string& input);
 	~Parser();
 	MMap<string, string> parse_tree();
+	Keyword commandType();
 private:
 	void makeTable();
 	void makeQueue(const string& input);
