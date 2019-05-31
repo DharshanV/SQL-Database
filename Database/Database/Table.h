@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <stdlib.h>
 #include "MMap.h"
 #include "map.h"
 #include "Record.h"

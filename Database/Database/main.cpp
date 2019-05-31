@@ -73,5 +73,6 @@ void tableTest3() {
 }
 
 int main() {
+	tableTest3();
 	return 0;
 }

@@ -115,20 +115,23 @@ void Table::selectAll()
 
 void Table::select(const vector<string>& fields)
 {
-	cout << "Select: " << fields << endl;
+	cout << setw(15) << std::left << " ";
+	for (int i = 0; i < fields.size(); i++) {
+		cout << setw(10) << std::left << fields[i];
+	}
+	cout << endl;
 	fstream f;
 	open_fileRW(f, (tableName + binaryExt).c_str());
 	if (f.fail()) return;
 	Record r;
 	int recordNo = 0;
-	cout << "**********************" << endl;
 	while (f.good()) {
 		r.read(f, recordNo);
 		if (f.eof())break;
-		cout << "Record number: " << recordNo << endl;
+		cout << setw(15) << std::left << string("Rec No "+to_string(recordNo)+":");
 		for (int i = 0; i < fields.size(); i++) {
 			int fieldI = fieldIndex[fields[i]];
-			cout << fields[i] << ": " << r.buffer[fieldI] << endl;
+			cout << setw(10)<<std::left<< r.buffer[fieldI];
 		}
 		cout << endl;
 		recordNo++;
