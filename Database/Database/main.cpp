@@ -72,7 +72,37 @@ void tableTest3() {
 	}
 }
 
+void tableTest4() {
+	ifstream in("inputs3.txt");
+	string line;
+	Table table;
+	while (!in.eof()) {
+		getline(in, line);
+		Parser parser(line);
+		MMap<string, string> tree = parser.parse_tree();
+		Keyword type = parser.commandType();
+		if (type == CREATE) {
+			cout << "CREATING NEW TABLE " << line << endl;
+			table = Table(tree["TABLE_NAME"][0], tree["FIELD_NAME"]);
+		}
+		else if (type == INSERT) {
+			cout << "INSERTING " << line << endl;
+			table.insert(tree["VALUES"]);
+		}
+		else if (type == SELECT) {
+			cout << "SELECTING " << line << endl;
+			if (tree.contains("CONDITION")) {
+				table.selectCondition(tree["CONDITION"]);
+			}
+			else {
+				table.select(tree["FIELD_NAME"]);
+			}
+		}
+		cout << "==============================" << endl;
+	}
+}
+
 int main() {
-	tableTest3();
+	tableTest4();
 	return 0;
 }

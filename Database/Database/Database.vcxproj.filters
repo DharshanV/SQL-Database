@@ -103,5 +103,8 @@
     <Text Include="inputs2.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="inputs3.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

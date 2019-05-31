@@ -28,8 +28,9 @@ public:
 	void insert(const vector<string>& data);
 	void selectAll();
 	void select(const vector<string>& fields);
+	void selectCondition(const vector<string>& condition);
 private:
-
+	vector<Record> getRecords(const vector<long>& recordIndex);
 private:
 	string tableName;
 	vector<string> fields;

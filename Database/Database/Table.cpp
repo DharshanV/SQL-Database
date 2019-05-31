@@ -27,17 +27,6 @@ Table::~Table()
 
 void Table::create()
 {
-	//ofstream out(tableName + fieldExt);
-	//string output;
-	//output += to_string(fields.size());
-	//output += "\n";
-	//for (int i = 0; i < fields.size(); i++) {
-	//	output += fields[i];
-	//	output += "\n";
-	//	indices.insert(fields[i], MMap<string, long>());
-	//}
-	//out << output;
-	//out.close();
 	fstream f;
 	open_fileRW(f, (tableName + fieldExt).c_str());
 	if (f.fail()) cout << "failed to open file" << endl;
@@ -62,14 +51,6 @@ void Table::open()
 	f = fstream();
 	open_fileRW(f, (tableName + fieldExt).c_str());
 	f.close();
-	//ofstream out;
-	//out.open((tableName + binaryExt));
-	//out.clear();
-	//out.close();
-	//out = ofstream();
-	//out.open((tableName + fieldExt));
-	//out.clear();
-	//out.close();
 }
 
 void Table::insert(const vector<string>& data)
@@ -82,17 +63,6 @@ void Table::insert(const vector<string>& data)
 	for (int i = 0; i < fields.size(); i++) {
 		indices[fields[i]][data[i]] += fileIndex;
 	}
-	//cout << indices << endl;
-	//f.close();
-	//f = fstream();
-	//open_fileRW(f, name.c_str());
-	//for (int i = 0; i < data.size(); i++) {
-	//	Record r;
-	//	cout << "Retrive data " << fields[i] << endl;
-	//	r.read(f, indices[fields[i]][data[i]][0]);
-	//	cout << r << endl;
-	//}
-	//f.close();
 }
 
 void Table::selectAll()
@@ -137,4 +107,48 @@ void Table::select(const vector<string>& fields)
 		recordNo++;
 	}
 	f.close();
+}
+
+void Table::selectCondition(const vector<string>& condition) {
+	struct Expresion {
+		Expresion(const string* f = NULL,const string* o = NULL,
+				 const string* v = NULL) {
+			field = f;
+			op = o;
+			value = v;
+		}
+		const string* field;
+		const string* op;
+		const string* value;
+	};
+	for (int i = 0; i < condition.size(); i += 3) {
+		Expresion ex(&condition[0], 
+					&condition[1], &condition[2]);
+		if (*ex.op == "=") {
+			MMap<string, long>* mmPtr = &indices[*ex.field];
+			cout << *mmPtr << endl;
+			vector<long>* vPtr = &(*mmPtr)[*ex.value];
+			vector<Record> records = getRecords(*vPtr);
+			for (int j = 0; j < records.size(); j++) {
+				cout << records[i] << endl;
+			}
+		}
+	}
+}
+
+vector<Record> Table::getRecords(const vector<long>& recordIndex)
+{
+	fstream f;
+	vector<Record> records;
+
+	open_fileRW(f, (tableName + binaryExt).c_str());
+
+	for (int i = 0; i < recordIndex.size(); i++) {
+		Record r;
+		r.read(f, recordIndex[i]);
+		records += r;
+	}
+
+	f.close();
+	return records;
 }
