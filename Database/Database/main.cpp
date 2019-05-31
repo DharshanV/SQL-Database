@@ -73,9 +73,5 @@ void tableTest3() {
 }
 
 int main() {
-	string test = "select lname,fname from student where major = \"bob\"";
-	Parser parser(test);
-	MMap<string, string> tree = parser.parse_tree();
-	cout << tree << endl;
 	return 0;
 }

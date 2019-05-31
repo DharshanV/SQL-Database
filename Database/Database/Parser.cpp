@@ -42,16 +42,23 @@ MMap<string, string> Parser::parse_tree()
 			tree["FIELD_NAME"] += input_q[i];
 			break;
 		case 8:
-			tree["RELATIONAL_OPERATOR"] += input_q[i];
-			break;
-		case 9:
-			tree["LOGICAL_OPERATOR"] += input_q[i];
-			break;
-		case 10:
 			if (!extractValue(tree,i,value)) {
 				cout << "INVALID COMMAND" << endl;
 				return tree;
 			}
+			tree["VALUES"] += value;
+			break;
+		case 14:
+			if (!extractValue(tree, i, value)) {
+				cout << "INVALID COMMAND" << endl;
+				return tree;
+			}
+			tree["CONDITION"] += value;
+			break;
+		case 12:
+		case 13:
+		case 15:
+			tree["CONDITION"] += input_q[i];
 			break;
 		case -1:
 			cout << "INVALID COMMAND" << endl;
@@ -85,12 +92,60 @@ void Parser::makeTable()
 {
 	init_table(table);
 
-	//SELECT
-	makeSelect();
-	//INSERT
-	makeInsert();
-	//CREATE AND MAKE
-	makeCreate();
+	////SELECT
+	//makeSelect();
+	////INSERT
+	//makeInsert();
+	////CREATE AND MAKE
+	//makeCreate();
+
+	mark_success(table, 3);
+
+	mark_cell(0, table, 1, 1);
+	mark_cell(0, table, 10, 1);
+	mark_cell(0, table, 13, 1);
+
+	mark_cell(1, table, 2, 2);
+	mark_cell(1, table, 4, 5);
+	mark_cell(1, table, 11, 3);
+	mark_cell(1, table, 14, 3);
+
+	mark_cell(2, table, 3, 3);
+
+	mark_cell(3, table, 4, 4);
+
+	mark_cell(4, table, 5, 9);
+	mark_cell(4, table, 6, 11);
+	mark_cell(4, table, 12, 9);
+	mark_cell(4, table, 15, 10);
+
+	mark_cell(5, table, 3, 3);
+	mark_cell(5, table, 5, 6);
+
+	mark_cell(6, table, 4, 5);
+
+	mark_cell(7, table, 4, 5);
+
+	mark_cell(8, table, 5, 9);
+	mark_cell(8, table, 8, 7);
+
+	mark_cell(9, table, 4, 4);
+	mark_cell(9, table, 9, 8);
+
+	mark_cell(10, table, 4, 5);
+
+	//new stuff
+	mark_cell(11, table, 4, 12);
+
+	mark_cell(12, table, 7, 13);
+	mark_cell(12, table, 8, 15);
+
+	mark_cell(13, table, 4, 12);
+	mark_cell(13, table, 9, 14);
+
+	mark_cell(14, table, 8, 15);
+
+	mark_cell(15, table, 4, 12);
 }
 
 void Parser::makeQueue(const string& input)
@@ -161,7 +216,6 @@ bool Parser::extractValue(MMap<string, string>& tree, int& index,string& value)
 		if(i+1!=stopIndex) value += " ";
 	}
 	index = stopIndex;
-	tree["VALUES"] += value;
 	return true;
 }
 
