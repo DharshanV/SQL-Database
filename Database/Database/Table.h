@@ -29,6 +29,7 @@ public:
 	void selectAll();
 	void select(const vector<string>& fields);
 	void selectCondition(const vector<string>& condition);
+	void reIndex();
 private:
 	vector<Record> getRecords(const vector<long>& recordIndex);
 private:

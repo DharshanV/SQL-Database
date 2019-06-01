@@ -31,8 +31,8 @@ void Table::create()
 	open_fileRW(f, (tableName + fieldExt).c_str());
 	if (f.fail()) cout << "failed to open file" << endl;
 	string output;
-	output += to_string(fields.size());
-	output += "\n";
+	//output += to_string(fields.size());
+	//output += "\n";
 	for (int i = 0; i < fields.size(); i++) {
 		output += fields[i];
 		output += "\n";
@@ -67,20 +67,8 @@ void Table::insert(const vector<string>& data)
 
 void Table::selectAll()
 {
-	cout << "Select All" << endl;
-	fstream f;
-	open_fileRW(f, (tableName + binaryExt).c_str());
-	Record r;
-	int i = 0;
-	while (f.good()) {
-		r.read(f, i);
-		if (f.eof())break;
-		cout << "=================" << endl;
-		cout << "Record number: " << i << endl;
-		cout << r << endl;
-		i++;
-	}
-	f.close();
+	cout << ">> select * from "<<tableName << endl;
+	select(fields);
 }
 
 void Table::select(const vector<string>& fields)
@@ -143,6 +131,23 @@ void Table::selectCondition(const vector<string>& condition) {
 				cout << endl;
 			}
 		}
+	}
+}
+
+void Table::reIndex()
+{
+	fstream f;
+	open_fileRW(f, (tableName + binaryExt).c_str());
+	long recIndex = 0;
+	while (f.good()) {
+		Record r;
+		r.read(f, recIndex);
+		if (f.eof()) break;
+		for (int i = 0; i < fields.size(); i++) {
+			string data(r.buffer[i]);
+			indices[fields[i]][data] += recIndex;
+		}
+		recIndex++;
 	}
 }
 

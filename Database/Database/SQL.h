@@ -15,11 +15,15 @@ public:
 	void run(const char* fileName);
 	void quit();
 private:
-	void printHelp();
-	void getInput(string& input,bool& quit);
-	bool executeCommand(const string& command);
 	void makeTable(const string& tableName, const vector<string>& fields);
+	void insertTable(const string& tableName, const vector<string>& value);
+	void getInput(string& input,bool& quit);
+	void printHelp();
 	void saveTables();
+	void loadPreviosSessions();
+	bool hasPreviousSessions();
+	bool executeCommand(const string& command);
+	vector<string> getTableFields(const string& tableName);
 private:
 	Map<string, Table> tables;
 };
