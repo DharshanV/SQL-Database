@@ -1,12 +1,13 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
-const int MAX_ROWS = 30;
-const int MAX_COLUMNS = 256;
-const int F_MAX_ROWS = 20;
-const int F_MAX_COLUMNS = 20;
-const int MAX_BUFFER = 100;
-const int R_MAX_ROW = 10;
-const int R_MAX_COL = 50;
+#define MAX_ROWS 30
+#define MAX_COLUMNS 256
+#define F_MAX_ROWS 20
+#define F_MAX_COLUMNS 20
+#define MAX_BUFFER 100
+#define R_MAX_ROW 10
+#define R_MAX_COL 50
+#define SETW 15
 enum START_STATES {
 	ALPHA = 0,
 	NUMBER = 7,

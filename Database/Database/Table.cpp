@@ -85,9 +85,9 @@ void Table::selectAll()
 
 void Table::select(const vector<string>& fields)
 {
-	cout << setw(15) << std::left << " ";
+	cout << setw(SETW) << std::left << " ";
 	for (int i = 0; i < fields.size(); i++) {
-		cout << setw(10) << std::left << fields[i];
+		cout << setw(SETW) << std::left << fields[i];
 	}
 	cout << endl;
 	fstream f;
@@ -101,7 +101,7 @@ void Table::select(const vector<string>& fields)
 		cout << setw(15) << std::left << string("Rec No "+to_string(recordNo)+":");
 		for (int i = 0; i < fields.size(); i++) {
 			int fieldI = fieldIndex[fields[i]];
-			cout << setw(10)<<std::left<< r.buffer[fieldI];
+			cout << setw(SETW)<<std::left<< r.buffer[fieldI];
 		}
 		cout << endl;
 		recordNo++;
@@ -121,16 +121,26 @@ void Table::selectCondition(const vector<string>& condition) {
 		const string* op;
 		const string* value;
 	};
+	
+	cout << setw(SETW) << std::left << " ";
+	for (int i = 0; i < fields.size(); i++) {
+		cout << setw(SETW) << std::left << fields[i];
+	}
+	cout << endl;
+
 	for (int i = 0; i < condition.size(); i += 3) {
 		Expresion ex(&condition[0], 
 					&condition[1], &condition[2]);
 		if (*ex.op == "=") {
 			MMap<string, long>* mmPtr = &indices[*ex.field];
-			cout << *mmPtr << endl;
 			vector<long>* vPtr = &(*mmPtr)[*ex.value];
 			vector<Record> records = getRecords(*vPtr);
 			for (int j = 0; j < records.size(); j++) {
-				cout << records[i] << endl;
+				cout << setw(SETW) << std::left << string("Rec No " + to_string(j) + ":");
+				for (int k = 0; k < fields.size(); k++) {
+					cout << setw(SETW) << std::left << records[j].buffer[k];
+				}
+				cout << endl;
 			}
 		}
 	}
