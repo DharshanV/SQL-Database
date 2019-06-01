@@ -4,6 +4,7 @@ int Parser::table[F_MAX_ROWS][F_MAX_COLUMNS];
 
 Parser::Parser(const string& input)
 {
+	valid = true;
 	makeIndexes();
 	makeTable();
 	makeQueue(input);
@@ -43,14 +44,14 @@ MMap<string, string> Parser::parse_tree()
 			break;
 		case 8:
 			if (!extractValue(tree,i,value)) {
-				cout << "INVALID COMMAND" << endl;
+				valid = false;
 				return tree;
 			}
 			tree["VALUES"] += value;
 			break;
 		case 14:
 			if (!extractValue(tree, i, value)) {
-				cout << "INVALID COMMAND" << endl;
+				valid = false;
 				return tree;
 			}
 			tree["CONDITION"] += value;
@@ -61,7 +62,7 @@ MMap<string, string> Parser::parse_tree()
 			tree["CONDITION"] += input_q[i];
 			break;
 		case -1:
-			cout << "INVALID COMMAND" << endl;
+			valid = false;
 			return tree;
 			break;
 		default:
@@ -88,16 +89,14 @@ Keyword Parser::commandType()
 	}
 }
 
+bool Parser::isValid()
+{
+	return valid;
+}
+
 void Parser::makeTable()
 {
 	init_table(table);
-
-	////SELECT
-	//makeSelect();
-	////INSERT
-	//makeInsert();
-	////CREATE AND MAKE
-	//makeCreate();
 
 	mark_success(table, 3);
 
@@ -217,60 +216,4 @@ bool Parser::extractValue(MMap<string, string>& tree, int& index,string& value)
 	}
 	index = stopIndex;
 	return true;
-}
-
-void Parser::makeSelect()
-{
-	mark_success(table, 3);
-	//Start -> select
-	mark_cell(0, table, 1, 1);
-	//select -> star
-	mark_cell(1, table, 2, 2);
-	//star -> from
-	mark_cell(2, table, 3, 3);
-	//from -> table name
-	mark_cell(3, table, 4, 4);
-	//select -> field
-	mark_cell(1, table, 4, 5);
-	//field -> from
-	mark_cell(5, table, 3, 3);
-	//field -> comma
-	mark_cell(5, table, 5, 6);
-	//comma -> field
-	mark_cell(6, table, 4, 5);
-	//table name -> where
-	mark_cell(4, table, 6, 7);
-	//where -> field
-	mark_cell(7, table, 4, 5);
-	//field -> RELATIONAL_OPERATOR
-	mark_cell(5, table, 7, 8);
-	//RELATIONAL_OPERATOR -> value
-	mark_cell(8, table, 4, 4);
-	//value -> logical op
-	mark_cell(4, table, 8, 9);
-	//logical op -> field
-	mark_cell(9, table, 4, 5);
-	//RELATIONAL_OPERATOR -> "
-	mark_cell(8, table, 9, 10);
-	//" -> logical op
-	mark_cell(10, table, 8, 9);
-}
-
-void Parser::makeInsert()
-{
-	mark_cell(0, table, 10, 1);
-	mark_cell(1, table, 11, 3);
-	mark_cell(4, table, 12, 11);
-	mark_cell(11, table, 4, 4);
-	mark_cell(4, table, 5, 11);
-	mark_cell(11, table, 9, 10);
-	mark_cell(10, table, 5, 11);
-}
-
-void Parser::makeCreate()
-{
-	mark_cell(0, table, 13, 1);
-	mark_cell(1, table, 14, 3);
-	mark_cell(4, table, 15, 12);
-	mark_cell(12, table, 4, 5);
 }

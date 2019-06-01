@@ -16,6 +16,7 @@ public:
 	~Parser();
 	MMap<string, string> parse_tree();
 	Keyword commandType();
+	bool isValid();
 private:
 	void makeTable();
 	void makeQueue(const string& input);
@@ -23,10 +24,8 @@ private:
 	string toLower(const string& input);
 	Keyword stringToKey(const string& word);
 	bool extractValue(MMap<string,string>& tree, int& index,string& value);
-	void makeSelect();
-	void makeInsert();
-	void makeCreate();
 private:
+	bool valid;
 	vector<string> input_q;
 	Map<string, Keyword> indexMap;
 	static int table[F_MAX_ROWS][F_MAX_COLUMNS];
