@@ -19,7 +19,6 @@ MMap<string, string> Parser::parse_tree()
 	MMap<string, string> tree;
 	int rowIndex = 0;
 	int colIndex = 0;
-	bool valid = true;
 	for (int i = 0; i < input_q.size(); i++) {
 		string value = toLower(input_q[i]);
 		colIndex = stringToKey(value);

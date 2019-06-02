@@ -5,6 +5,6 @@ using namespace std;
 //have a bool to keep track if i am inside quotes, if i am then take in both 
 int main() {
 	SQL sql;
-	sql.run("sqlTest2.txt");
+	sql.run();
 	return 0;
 }

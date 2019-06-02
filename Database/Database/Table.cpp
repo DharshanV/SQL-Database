@@ -67,7 +67,6 @@ void Table::insert(const vector<string>& data)
 
 void Table::selectAll()
 {
-	cout << ">> select * from "<<tableName << endl;
 	select(fields);
 }
 

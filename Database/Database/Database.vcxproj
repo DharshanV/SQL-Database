@@ -154,6 +154,7 @@
     <Text Include="inputs3.txt" />
     <Text Include="sqlTest2.txt" />
     <Text Include="sqlTest.txt" />
+    <Text Include="sqlTest3.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

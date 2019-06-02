@@ -20,9 +20,14 @@ void SQL::run()
 	do {
 		cout << ">> ";
 		getInput(input, quit);
-		if (quit)this->quit();
+		if (quit) { 
+			this->quit();
+			break; 
+		}
 		valid = executeCommand(input);
-		if (!valid) printHelp();
+		if (!valid) {
+			cout << "INVALID COMMAND" << endl; printHelp();
+		}
 	} while (quit != true);
 }
 
@@ -33,8 +38,10 @@ void SQL::run(const char* fileName)
 	bool valid = true;
 	while (!reader.eof()) {
 		getline(reader, line);
-		cout << ">> " << line << endl;
-		valid = executeCommand(line);
+		if (line.size() != 0 && line.at(0) != '/') {
+			cout << ">> " << line << endl;
+			valid = executeCommand(line);
+		}
 	}
 }
 
@@ -92,7 +99,7 @@ void SQL::loadPreviosSessions()
 	in.close();
 }
 
-bool SQL::executeCommand(const string& command)
+bool SQL::executeCommand(cstring command)
 {
 	bool valid = true;
 	Parser parse(command);
@@ -109,7 +116,8 @@ bool SQL::executeCommand(const string& command)
 		insertTable(tree["TABLE_NAME"][0], tree["VALUES"]);
 		break;
 	case Keyword::SELECT:
-
+		selectTable(tree["TABLE_NAME"][0], 
+					tree["FIELD_NAME"], tree["CONDITION"]);
 		break;
 	default:
 		break;
@@ -118,7 +126,7 @@ bool SQL::executeCommand(const string& command)
 	return true;
 }
 
-vector<string> SQL::getTableFields(const string& tableName)
+vector<string> SQL::getTableFields(cstring tableName)
 {
 	vector<string> fields;
 	ifstream in("Data\\" + tableName + "_fields.txt");
@@ -131,14 +139,14 @@ vector<string> SQL::getTableFields(const string& tableName)
 	return fields;
 }
 
-void SQL::makeTable(const string& tableName,const vector<string>& fields)
+void SQL::makeTable(cstring tableName,cvstring fields)
 {
 	if (!tables.contains(tableName)) {
 		tables.insert(tableName, Table(tableName, fields));
 	}
 }
 
-void SQL::insertTable(const string& tableName, const vector<string>& value)
+void SQL::insertTable(cstring tableName,cvstring value)
 {
 	if (!tables.contains(tableName)) {
 		cout << tableName << " table has not been created" << endl;
@@ -146,6 +154,23 @@ void SQL::insertTable(const string& tableName, const vector<string>& value)
 	}
 	tables[tableName].insert(value);
 	tables[tableName].selectAll();
+}
+
+void SQL::selectTable(cstring tableName,cvstring fields,cvstring condition)
+{
+	if (condition.size() == 0) {
+		if (fields[0] == "*") {
+			tables[tableName].selectAll();
+		}
+		else {
+			tables[tableName].select(fields);
+		}
+	}
+	else {
+		if (fields[0] == "*") {
+			tables[tableName].selectCondition(condition);
+		}
+	}
 }
 
 void SQL::saveTables()
