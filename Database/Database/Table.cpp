@@ -156,7 +156,9 @@ void Table::selectCondition(const vector<string>& condition) {
 			commands.clear();
 		}
 		else if (shantingYard.front() == "or") {
-
+			recordIndices += _union(recordIndices.pop(), recordIndices.pop());
+			shantingYard.pop();
+			commands.clear();
 		}
 		else {
 			commands += shantingYard.pop();
@@ -224,6 +226,10 @@ Queue<string> Table::getShantingYard(const vector<string>& condition)
 			}
 			if (condition[i] == "or") {
 				shantingYard += stack.pop();
+				if (stack.empty()) {
+					stack.push("or");
+					break;
+				}
 				if (stack.top() == "and") {
 					shantingYard += stack.pop();
 					stack.push(condition[i]);
@@ -262,6 +268,14 @@ Keyword Table::getType(const string& value)
 
 vector<long> Table::intersection(const vector<long>& left, const vector<long>& right) {
 	vector<long> mergedVector;
+	set_intersection(left.begin(), left.end(), 
+		right.begin(), right.end(), back_inserter(mergedVector));
+	return mergedVector;
+}
 
+vector<long> Table::_union(const vector<long>& left, const vector<long>& right) {
+	vector<long> mergedVector;
+	set_union(left.begin(), left.end(),
+		right.begin(), right.end(), back_inserter(mergedVector));
 	return mergedVector;
 }

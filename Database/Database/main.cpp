@@ -36,6 +36,10 @@ vector<string> getShantingYard(const vector<string>& condition)
 			}
 			if (condition[i] == "or") {
 				shantingYard += stack.pop();
+				if (stack.empty()) {
+					stack.push("or");
+					break;
+				}
 				if (stack.top() == "and") {
 					shantingYard += stack.pop();
 					stack.push(condition[i]);
@@ -59,7 +63,7 @@ vector<string> getShantingYard(const vector<string>& condition)
 }
 
 int main() {
-	//string test = "select lname, fname from student where lname = alex and age = 10 and major = CS";
+	//string test = "select * from student where fname = Flo or lname = Jackson and f = g or j = k";
 
 	//Parser parser(test);
 	//MMap<string, string> tree = parser.parse_tree();

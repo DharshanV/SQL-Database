@@ -5,6 +5,7 @@
 #include <vector>
 #include <fstream>
 #include <stdlib.h>
+#include <algorithm>
 #include "MMap.h"
 #include "map.h"
 #include "Record.h"
@@ -47,6 +48,7 @@ public:
 private:
 	vector<Record> getRecords(const vector<long>& recordIndex);
 	vector<long> intersection(const vector<long>& left, const vector<long>& right);
+	vector<long> _union(const vector<long>& left, const vector<long>& right);
 	Queue<string> getShantingYard(const vector<string>& condition);
 	Keyword getType(const string& value);
 private:
