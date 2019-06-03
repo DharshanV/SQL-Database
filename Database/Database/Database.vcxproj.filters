@@ -95,6 +95,18 @@
     <ClInclude Include="SQL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="queue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linkedlistfuntions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="inputs.txt">
@@ -113,6 +125,9 @@
       <Filter>Resource Files</Filter>
     </Text>
     <Text Include="sqlTest3.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="myTest.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>

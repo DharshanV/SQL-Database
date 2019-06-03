@@ -96,18 +96,32 @@ void Table::select(const vector<string>& fields)
 	f.close();
 }
 
+//AND = ITERSENCTION
+//OR = UNION
 void Table::selectCondition(const vector<string>& condition) {
-	struct Expresion {
-		Expresion(const string* f = NULL,const string* o = NULL,
-				 const string* v = NULL) {
-			field = f;
-			op = o;
-			value = v;
-		}
-		const string* field;
-		const string* op;
-		const string* value;
-	};
+	//for (int i = 0; i < shantingYard.size(); i += 3) {
+	//	Expresion ex(&condition[0], 
+	//				&condition[1], &condition[2]);
+	//	if (*ex.op == "=") {
+	//		vector<long> recIndices = indices[*ex.field][*ex.value];
+	//		vector<Record> records = getRecords(recIndices);
+	//		for (int j = 0; j < records.size(); j++) {
+	//			cout << setw(SETW) << std::left << string("Rec No " + to_string(j) + ":");
+	//			for (int k = 0; k < fields.size(); k++) {
+	//				cout << setw(SETW) << std::left << records[j].buffer[k];
+	//			}
+	//			cout << endl;
+	//		}
+	//	}
+	//}
+	//vector<Record> records = getRecords(recIndices);
+	//for (int j = 0; j < records.size(); j++) {
+	//	cout << setw(SETW) << std::left << string("Rec No " + to_string(j) + ":");
+	//	for (int k = 0; k < fields.size(); k++) {
+	//		cout << setw(SETW) << std::left << records[j].buffer[k];
+	//	}
+	//	cout << endl;
+	//}
 	
 	cout << setw(SETW) << std::left << " ";
 	for (int i = 0; i < fields.size(); i++) {
@@ -115,21 +129,46 @@ void Table::selectCondition(const vector<string>& condition) {
 	}
 	cout << endl;
 
-	for (int i = 0; i < condition.size(); i += 3) {
-		Expresion ex(&condition[0], 
-					&condition[1], &condition[2]);
-		if (*ex.op == "=") {
-			MMap<string, long>* mmPtr = &indices[*ex.field];
-			vector<long>* vPtr = &(*mmPtr)[*ex.value];
-			vector<Record> records = getRecords(*vPtr);
-			for (int j = 0; j < records.size(); j++) {
-				cout << setw(SETW) << std::left << string("Rec No " + to_string(j) + ":");
-				for (int k = 0; k < fields.size(); k++) {
-					cout << setw(SETW) << std::left << records[j].buffer[k];
-				}
-				cout << endl;
-			}
+	Queue<string> shantingYard = getShantingYard(condition);
+	Stack<vector<long> > recordIndices;
+	vector<string> commands;
+	while (!shantingYard.empty()) {
+		if (shantingYard.front() == "=") {
+			recordIndices += indices[commands[0]][commands[1]];
+			shantingYard.pop();
+			commands.clear();
 		}
+		else if (shantingYard.front() == "<") {
+
+		}
+		else if (shantingYard.front() == "<=") {
+
+		}
+		else if (shantingYard.front() == ">") {
+
+		}
+		else if (shantingYard.front() == ">=") {
+
+		}
+		else if (shantingYard.front() == "and") {
+			recordIndices += intersection(recordIndices.pop(), recordIndices.pop());
+			shantingYard.pop();
+			commands.clear();
+		}
+		else if (shantingYard.front() == "or") {
+
+		}
+		else {
+			commands += shantingYard.pop();
+		}
+	}
+	vector<Record> records = getRecords(recordIndices.pop());
+	for (int j = 0; j < records.size(); j++) {
+		cout << setw(SETW) << std::left << string("Rec No " + to_string(j) + ":");
+		for (int k = 0; k < fields.size(); k++) {
+			cout << setw(SETW) << std::left << records[j].buffer[k];
+		}
+		cout << endl;
 	}
 }
 
@@ -165,4 +204,64 @@ vector<Record> Table::getRecords(const vector<long>& recordIndex)
 
 	f.close();
 	return records;
+}
+
+Queue<string> Table::getShantingYard(const vector<string>& condition)
+{
+	Stack<string> stack;
+	Queue<string> shantingYard;
+	for (int i = 0; i < condition.size(); i++) {
+		Keyword type = getType(condition[i]);
+		switch (type)
+		{
+		case RELATIONAL_OPERATOR:
+			stack.push(condition[i]);
+			break;
+		case LOGICAL_OPERATOR:
+			if (condition[i] == "and") {
+				shantingYard += stack.pop();
+				stack.push(condition[i]);
+			}
+			if (condition[i] == "or") {
+				shantingYard += stack.pop();
+				if (stack.top() == "and") {
+					shantingYard += stack.pop();
+					stack.push(condition[i]);
+				}
+				else {
+					stack.push(condition[i]);
+				}
+			}
+			break;
+		case SYMOBL:
+			shantingYard += condition[i];
+			break;
+		default:
+			break;
+		}
+	}
+	while (!stack.empty()) {
+		shantingYard += stack.pop();
+	}
+	return shantingYard;
+}
+
+Keyword Table::getType(const string& value)
+{
+	if (value == "=" || value == "<" || value == "<="
+		|| value == ">" || value == ">=") {
+		return RELATIONAL_OPERATOR;
+	}
+	else if (value == "and" || value == "or") {
+		return LOGICAL_OPERATOR;
+	}
+	else {
+		return SYMOBL;
+	}
+}
+
+vector<long> Table::intersection(const vector<long>& left, const vector<long>& right) {
+	vector<long> mergedVector;
+
+	return mergedVector;
 }

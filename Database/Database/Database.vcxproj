@@ -134,14 +134,18 @@
     <ClInclude Include="BPlusTree.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="FStateMachine.h" />
+    <ClInclude Include="linkedlistfuntions.h" />
+    <ClInclude Include="list.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="MMap.h" />
     <ClInclude Include="mmpair.h" />
     <ClInclude Include="pair.h" />
     <ClInclude Include="Parser.h" />
+    <ClInclude Include="queue.h" />
     <ClInclude Include="random.h" />
     <ClInclude Include="Record.h" />
     <ClInclude Include="SQL.h" />
+    <ClInclude Include="stack.h" />
     <ClInclude Include="StateMachine.h" />
     <ClInclude Include="STokenizer.h" />
     <ClInclude Include="Table.h" />
@@ -152,6 +156,7 @@
     <Text Include="inputs.txt" />
     <Text Include="inputs2.txt" />
     <Text Include="inputs3.txt" />
+    <Text Include="myTest.txt" />
     <Text Include="sqlTest2.txt" />
     <Text Include="sqlTest.txt" />
     <Text Include="sqlTest3.txt" />

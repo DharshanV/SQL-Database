@@ -8,7 +8,21 @@
 #include "MMap.h"
 #include "map.h"
 #include "Record.h"
+#include "stack.h"
+#include "queue.h"
 using namespace std;
+struct Expresion {
+	Expresion(const string* f = NULL, const string* o = NULL,
+		const string* v = NULL) {
+		field = f;
+		op = o;
+		value = v;
+	}
+	const string* field;
+	const string* op;
+	const string* value;
+};
+
 class Table
 {
 public:
@@ -32,6 +46,9 @@ public:
 	void reIndex();
 private:
 	vector<Record> getRecords(const vector<long>& recordIndex);
+	vector<long> intersection(const vector<long>& left, const vector<long>& right);
+	Queue<string> getShantingYard(const vector<string>& condition);
+	Keyword getType(const string& value);
 private:
 	string tableName;
 	vector<string> fields;
