@@ -253,4 +253,13 @@ vector<T>& operator+=(vector<T>& list, const T& addme)
 	return list;
 }
 
+template<typename T>
+vector<T>& operator+=(vector<T>& list, const vector<T>& addme)
+{
+	for (int i = 0; i < addme.size(); i++) {
+		list.push_back(addme[i]);
+	}
+	return list;
+}
+
 #endif // !ARRAY_UTILITYS_H

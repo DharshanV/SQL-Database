@@ -12,17 +12,6 @@
 #include "stack.h"
 #include "queue.h"
 using namespace std;
-struct Expresion {
-	Expresion(const string* f = NULL, const string* o = NULL,
-		const string* v = NULL) {
-		field = f;
-		op = o;
-		value = v;
-	}
-	const string* field;
-	const string* op;
-	const string* value;
-};
 
 class Table
 {
@@ -47,10 +36,12 @@ public:
 	void reIndex();
 private:
 	vector<Record> getRecords(const vector<long>& recordIndex);
-	vector<long> intersection(const vector<long>& left, const vector<long>& right);
-	vector<long> _union(const vector<long>& left, const vector<long>& right);
+	vector<long> intersection(vector<long> left,vector<long> right);
+	vector<long> _union(vector<long> left, vector<long> right);
 	Queue<string> getShantingYard(const vector<string>& condition);
 	Keyword getType(const string& value);
+	vector<long> getLower(vector<string>& commands,bool equal);
+	vector<long> getUpper(vector<string>& commands, bool equal);
 private:
 	string tableName;
 	vector<string> fields;

@@ -70,6 +70,6 @@ int main() {
 	//cout << getShantingYard(tree["CONDITION"]) << endl;
 	//return 0;
 	SQL sql;
-	sql.run("myTest.txt");
+	sql.run("inputs.txt");
 	return 0;
 }

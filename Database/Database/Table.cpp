@@ -31,8 +31,6 @@ void Table::create()
 	open_fileRW(f, (tableName + fieldExt).c_str());
 	if (f.fail()) cout << "failed to open file" << endl;
 	string output;
-	//output += to_string(fields.size());
-	//output += "\n";
 	for (int i = 0; i < fields.size(); i++) {
 		output += fields[i];
 		output += "\n";
@@ -96,33 +94,7 @@ void Table::select(const vector<string>& fields)
 	f.close();
 }
 
-//AND = ITERSENCTION
-//OR = UNION
 void Table::selectCondition(const vector<string>& condition) {
-	//for (int i = 0; i < shantingYard.size(); i += 3) {
-	//	Expresion ex(&condition[0], 
-	//				&condition[1], &condition[2]);
-	//	if (*ex.op == "=") {
-	//		vector<long> recIndices = indices[*ex.field][*ex.value];
-	//		vector<Record> records = getRecords(recIndices);
-	//		for (int j = 0; j < records.size(); j++) {
-	//			cout << setw(SETW) << std::left << string("Rec No " + to_string(j) + ":");
-	//			for (int k = 0; k < fields.size(); k++) {
-	//				cout << setw(SETW) << std::left << records[j].buffer[k];
-	//			}
-	//			cout << endl;
-	//		}
-	//	}
-	//}
-	//vector<Record> records = getRecords(recIndices);
-	//for (int j = 0; j < records.size(); j++) {
-	//	cout << setw(SETW) << std::left << string("Rec No " + to_string(j) + ":");
-	//	for (int k = 0; k < fields.size(); k++) {
-	//		cout << setw(SETW) << std::left << records[j].buffer[k];
-	//	}
-	//	cout << endl;
-	//}
-	
 	cout << setw(SETW) << std::left << " ";
 	for (int i = 0; i < fields.size(); i++) {
 		cout << setw(SETW) << std::left << fields[i];
@@ -139,16 +111,20 @@ void Table::selectCondition(const vector<string>& condition) {
 			commands.clear();
 		}
 		else if (shantingYard.front() == "<") {
-
+			recordIndices += getLower(commands,false);
+			shantingYard.pop();
 		}
 		else if (shantingYard.front() == "<=") {
-
+			recordIndices += getLower(commands, true);;
+			shantingYard.pop();
 		}
 		else if (shantingYard.front() == ">") {
-
+			recordIndices += getUpper(commands,false);
+			shantingYard.pop();
 		}
 		else if (shantingYard.front() == ">=") {
-
+			recordIndices += getUpper(commands, true);
+			shantingYard.pop();
 		}
 		else if (shantingYard.front() == "and") {
 			recordIndices += intersection(recordIndices.pop(), recordIndices.pop());
@@ -266,15 +242,49 @@ Keyword Table::getType(const string& value)
 	}
 }
 
-vector<long> Table::intersection(const vector<long>& left, const vector<long>& right) {
+vector<long> Table::getLower(vector<string>& commands, bool equal)
+{
+	vector<long> temp;
+	MMap<string, long>* map = &(indices[commands[0]]);
+	MMap<string, long>::Iterator it;
+	if (!map->contains(commands[1])) return temp;
+	MMap<string, long>::Iterator end = map->find(commands[1]);
+	if(equal)temp += indices[commands[0]][commands[1]];
+	for (it = map->begin(); it != end; it++) {
+		temp += (*it).value;
+	}
+	commands.clear();
+	return temp;
+}
+
+vector<long> Table::getUpper(vector<string>& commands, bool equal)
+{
+	vector<long> temp;
+	MMap<string, long>* map = &(indices[commands[0]]);
+	MMap<string, long>::Iterator it;
+	if (!map->contains(commands[1])) return temp;
+	MMap<string, long>::Iterator start = map->find(commands[1]);
+	if (!equal)start++;
+	for (it = start; it != map->end(); it++) {
+		temp += (*it).value;
+	}
+	commands.clear();
+	return temp;
+}
+
+vector<long> Table::intersection(vector<long> left, vector<long> right) {
 	vector<long> mergedVector;
-	set_intersection(left.begin(), left.end(), 
+	sort(left.begin(), left.end());
+	sort(right.begin(), right.end());
+	set_intersection(left.begin(), left.end(),
 		right.begin(), right.end(), back_inserter(mergedVector));
 	return mergedVector;
 }
 
-vector<long> Table::_union(const vector<long>& left, const vector<long>& right) {
+vector<long> Table::_union(vector<long> left, vector<long> right) {
 	vector<long> mergedVector;
+	sort(left.begin(), left.end());
+	sort(right.begin(), right.end());
 	set_union(left.begin(), left.end(),
 		right.begin(), right.end(), back_inserter(mergedVector));
 	return mergedVector;
