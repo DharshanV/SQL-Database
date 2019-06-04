@@ -36,11 +36,17 @@ void SQL::run(const char* fileName)
 	ifstream reader(fileName);
 	string line;
 	bool valid = true;
+	int i = 1;
 	while (!reader.eof()) {
 		getline(reader, line);
 		if (line.size() != 0 && line.at(0) != '/') {
-			cout << ">> " << line << endl;
+			cout <<i<< ". >> " << line << endl;
 			valid = executeCommand(line);
+			cout << endl;
+			i++;
+		}
+		else {
+			cout << line << endl;
 		}
 	}
 }
