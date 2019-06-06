@@ -19,6 +19,7 @@ public:
 	Table();
 	Table(const string& tableName);
 	Table(const string& tableName, const vector<string>& fields);
+	Table(const string& tableName, const vector<string>& fields,const vector<long>& recNo);
 	Table& operator=(const Table& other) {
 		tableName = other.tableName;
 		fields = other.fields;
@@ -34,6 +35,10 @@ public:
 	void select(const vector<string>& fields);
 	void selectCondition(const vector<string>& condition);
 	void reIndex();
+	friend ostream& operator<<(ostream& outs, const Table& print_me) {
+
+		return outs;
+	}
 private:
 	vector<Record> getRecords(const vector<long>& recordIndex);
 	vector<long> intersection(vector<long> left,vector<long> right);
@@ -44,6 +49,7 @@ private:
 	vector<long> getUpper(vector<string>& commands, bool equal);
 private:
 	string tableName;
+	vector<long> recNo;
 	vector<string> fields;
 	Map<string, MMap<string, long>> indices;
 	Map<string, int> fieldIndex;

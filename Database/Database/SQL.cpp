@@ -25,9 +25,7 @@ void SQL::run()
 			break; 
 		}
 		valid = executeCommand(input);
-		if (!valid) {
-			cout << "INVALID COMMAND" << endl; printHelp();
-		}
+		if (!valid) printHelp();
 	} while (quit != true);
 }
 
@@ -42,6 +40,7 @@ void SQL::run(const char* fileName)
 		if (line.size() != 0 && line.at(0) != '/') {
 			cout <<i<< ". >> " << line << endl;
 			valid = executeCommand(line);
+			if (!valid) printHelp();
 			cout << endl;
 			i++;
 		}
@@ -58,7 +57,7 @@ void SQL::quit()
 
 void SQL::printHelp()
 {
-
+	cout << "INVALID COMMAND" << endl;
 }
 
 void SQL::getInput(string& input, bool& quit)
@@ -136,6 +135,7 @@ vector<string> SQL::getTableFields(cstring tableName)
 {
 	vector<string> fields;
 	ifstream in("Data\\" + tableName + "_fields.txt");
+	if (in.fail())return fields;
 	string field;
 	while (!in.eof()) {
 		getline(in, field);

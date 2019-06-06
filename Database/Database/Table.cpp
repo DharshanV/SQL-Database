@@ -20,6 +20,14 @@ Table::Table(const string& tableName, const vector<string>& fields)
 	create();
 }
 
+Table::Table(const string& tableName, const vector<string>& fields, const vector<long>& recNo)
+{
+	this->tableName += "Data\\";
+	this->tableName += tableName;
+	this->fields = fields;
+	this->recNo = recNo;
+}
+
 
 Table::~Table()
 {

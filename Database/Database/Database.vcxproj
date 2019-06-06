@@ -156,6 +156,7 @@
     <Text Include="inputs.txt" />
     <Text Include="inputs2.txt" />
     <Text Include="inputs3.txt" />
+    <Text Include="invalid.txt" />
     <Text Include="myTest.txt" />
     <Text Include="sqlTest2.txt" />
     <Text Include="sqlTest.txt" />

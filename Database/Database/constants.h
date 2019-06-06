@@ -1,6 +1,6 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
-#define MAX_ROWS 30
+#define MAX_ROWS 35
 #define MAX_COLUMNS 256
 #define F_MAX_ROWS 20
 #define F_MAX_COLUMNS 20
@@ -17,6 +17,7 @@ enum START_STATES {
 	LESS = 21,
 	GREATER = 23,
 	TABS = 25,
+	QUOTES_ = 27,
 	POINTER = MAX_ROWS-1,
 	FPOINTER = F_MAX_ROWS-1
 };

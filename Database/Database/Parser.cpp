@@ -68,7 +68,9 @@ MMap<string, string> Parser::parse_tree()
 			break;
 		}
 		rowIndex = table[rowIndex][colIndex];
+		//valid = table[rowIndex][0];
 	}
+	if (tree["TABLE_NAME"].size() == 0)valid = false;
 	return tree;
 }
 

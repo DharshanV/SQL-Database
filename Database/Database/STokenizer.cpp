@@ -85,7 +85,7 @@ void STokenizer::make_table(int _table[][MAX_COLUMNS]) {
 	mark_fail(_table, LESS);
 	mark_success(_table, LESS+1);
 
-	//LESS
+	//GREATER
 	mark_fail(_table, GREATER);
 	mark_success(_table, GREATER + 1);
 
@@ -127,6 +127,10 @@ void STokenizer::make_table(int _table[][MAX_COLUMNS]) {
 	mark_cells(GREATER + 1, _table, '>', '>', GREATER + 1);
 	mark_cells(GREATER + 1, _table, '=', '=', EQUAL);
 
+	//For QUOTES
+	mark_cells(QUOTES_, _table, '\"', '\"', QUOTES_ + 1);
+	mark_cells(QUOTES_ + 1, _table, '\"', '\"', QUOTES_ + 1);
+
 	//Marking pointer cells
 	mark_cells(POINTER, _table, '0', '9', NUMBER);
 	mark_cells(POINTER, _table, '.', '.', NUMBER);
@@ -138,6 +142,14 @@ void STokenizer::make_table(int _table[][MAX_COLUMNS]) {
 	mark_cells(POINTER, _table, '=', '=', EQUAL);
 	mark_cells(POINTER, _table, '<', '<', LESS);
 	mark_cells(POINTER, _table, '>', '>', GREATER);
+	mark_cells(POINTER, _table, '\"', '\"', QUOTES_);
+
+
+	mark_fail(_table, QUOTES_);
+	mark_success(_table, QUOTES_ + 2);
+	mark_cells(QUOTES_, _table, '\"', '\"', QUOTES_+1);
+	mark_cells(QUOTES_ + 1, _table, 'a', 'z', QUOTES_ + 1);
+	mark_cells(QUOTES_ + 1, _table, '\"', '\"', QUOTES_ + 2);
 }
 
 bool STokenizer::getToken(int start_state, string& token)
