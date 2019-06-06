@@ -148,7 +148,8 @@ void STokenizer::make_table(int _table[][MAX_COLUMNS]) {
 	mark_fail(_table, QUOTES_);
 	mark_success(_table, QUOTES_ + 2);
 	mark_cells(QUOTES_, _table, '\"', '\"', QUOTES_+1);
-	mark_cells(QUOTES_ + 1, _table, 'a', 'z', QUOTES_ + 1);
+	mark_cells(QUOTES_ + 1, _table, 1, '\"'-1, QUOTES_ + 1);
+	mark_cells(QUOTES_ + 1, _table, '\"' + 1, MAX_COLUMNS, QUOTES_ + 1);
 	mark_cells(QUOTES_ + 1, _table, '\"', '\"', QUOTES_ + 2);
 }
 
@@ -163,6 +164,9 @@ STokenizer& operator>>(STokenizer& s, Token& t)
 	int pointerState = s._table[POINTER][s._buffer[s._pos]];	//Gets the valid pointer table index
 	bool isValid = s.getToken(pointerState, token);
 	if (isValid) {
+		if (token[0] == '\"' && token[token.size() - 1] == '\"') {
+			token = token.substr(1, token.size() - 2);
+		}
 		t = Token(token, pointerState);
 	}
 	else {
