@@ -164,9 +164,6 @@ STokenizer& operator>>(STokenizer& s, Token& t)
 	int pointerState = s._table[POINTER][s._buffer[s._pos]];	//Gets the valid pointer table index
 	bool isValid = s.getToken(pointerState, token);
 	if (isValid) {
-		if (token[0] == '\"' && token[token.size() - 1] == '\"') {
-			token = token.substr(1, token.size() - 2);
-		}
 		t = Token(token, pointerState);
 	}
 	else {

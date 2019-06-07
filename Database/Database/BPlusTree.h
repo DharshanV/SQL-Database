@@ -377,7 +377,8 @@ typename BPlusTree<T>::Iterator BPlusTree<T>::find(const T& entry)
             return Iterator(this,index);
         }
         else {
-			return Iterator(this, index-1);
+			if (index - 1 < 0)return Iterator(this, index);
+			else return Iterator(this, index-1);
         }
     }
     if(found){

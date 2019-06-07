@@ -86,7 +86,7 @@ bool get_token(char input[], int& pos,
 		isValid = true;
 	}
 	for (int i = initialPos; i <= lastValidPos; i++) {
-		token += input[i];
+		if(input[i] != '\"') token += input[i];
 	}
 	return isValid;
 }

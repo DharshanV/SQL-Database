@@ -110,7 +110,6 @@ void Table::selectCondition(const vector<string>& condition) {
 	cout << endl;
 
 	Queue<string> shantingYard = getShantingYard(condition);
-	cout << shantingYard << endl;
 	Stack<vector<long> > recordIndices;
 	vector<string> commands;
 	while (!shantingYard.empty()) {
@@ -258,7 +257,7 @@ vector<long> Table::getLower(vector<string>& commands, bool equal)
 	cout << *map << endl;
 	MMap<string, long>::Iterator it;
 	MMap<string, long>::Iterator end = map->find(commands[1]);
-	if(equal)temp += indices[commands[0]][commands[1]];
+	if(equal && !map->contains(commands[1]))temp += (*end).value;
 	for (it = map->begin(); it != end; it++) {
 		temp += (*it).value;
 	}
@@ -270,10 +269,10 @@ vector<long> Table::getUpper(vector<string>& commands, bool equal)
 {
 	vector<long> temp;
 	MMap<string, long>* map = &(indices[commands[0]]);
+	cout << *map << endl;
 	MMap<string, long>::Iterator it;
-	if (!map->contains(commands[1])) return temp;
 	MMap<string, long>::Iterator start = map->find(commands[1]);
-	if (!equal)start++;
+	if (!equal && map->contains(commands[1]))start++;
 	for (it = start; it != map->end(); it++) {
 		temp += (*it).value;
 	}
