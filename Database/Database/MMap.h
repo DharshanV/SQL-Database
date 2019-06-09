@@ -14,6 +14,9 @@ public:
 		Iterator(typename map_base::Iterator it = NULL) {
 			_it = it;
 		}
+		bool isNull() {
+			return _it.is_null();
+		}
 		Iterator operator ++(int unused) {
 			return _it++;
 		}

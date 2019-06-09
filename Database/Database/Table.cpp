@@ -254,12 +254,14 @@ vector<long> Table::getLower(vector<string>& commands, bool equal)
 {
 	vector<long> temp;
 	MMap<string, long>* map = &(indices[commands[0]]);
-	cout << *map << endl;
-	MMap<string, long>::Iterator it;
+	MMap<string, long>::Iterator it = map->begin();
 	MMap<string, long>::Iterator end = map->find(commands[1]);
-	if(equal && !map->contains(commands[1]))temp += (*end).value;
-	for (it = map->begin(); it != end; it++) {
+	if (equal && !end.isNull() && (*end).key == commands[1]) {
+		end++;
+	}
+	while (it != end) {
 		temp += (*it).value;
+		it++;
 	}
 	commands.clear();
 	return temp;
@@ -269,12 +271,13 @@ vector<long> Table::getUpper(vector<string>& commands, bool equal)
 {
 	vector<long> temp;
 	MMap<string, long>* map = &(indices[commands[0]]);
-	cout << *map << endl;
-	MMap<string, long>::Iterator it;
 	MMap<string, long>::Iterator start = map->find(commands[1]);
-	if (!equal && map->contains(commands[1]))start++;
-	for (it = start; it != map->end(); it++) {
-		temp += (*it).value;
+	if (!equal && !start.isNull() && (*start).key == commands[1]) {
+		start++;
+	}
+	while (start != map->end()) {
+		temp += (*start).value;
+		start++;
 	}
 	commands.clear();
 	return temp;
