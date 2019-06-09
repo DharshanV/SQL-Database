@@ -12,7 +12,9 @@ public:
     class Iterator{
     public:
         friend class BPlusTree;
-        Iterator(BPlusTree<T>* _it=NULL, int _key_ptr = 0):it(_it), key_ptr(_key_ptr){}
+        Iterator(BPlusTree<T>* _it=NULL, int _key_ptr = 0)
+			:it(_it), key_ptr(_key_ptr) {
+		}
 
         T operator *(){
             assert(key_ptr<it->data_count);
@@ -377,8 +379,13 @@ typename BPlusTree<T>::Iterator BPlusTree<T>::find(const T& entry)
             return Iterator(this,index);
         }
         else {
-			if (index - 1 < 0)return Iterator(this, index);
-			else return Iterator(this, index-1);
+			if (index - 1 < 0) {
+				return Iterator(this, index);
+			}
+			if (index == data_count) {
+				return ++Iterator(this, index-1);
+			}
+			return Iterator(this, index-1);
         }
     }
     if(found){
