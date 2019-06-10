@@ -32,28 +32,16 @@ MMap<string, string> Parser::parse_tree()
 			break;
 		case 4:
 			if (table[rowIndex][0]) {
-				tree["TABLE_NAME"] += input_q[i];
-			}
-			else {
-				tree["VALUES"] += input_q[i];
+				if (rowIndex == 9) {
+					tree["VALUES"] += input_q[i];
+				}
+				else {
+					tree["TABLE_NAME"] += input_q[i];
+				}
 			}
 			break;
 		case 5:
 			tree["FIELD_NAME"] += input_q[i];
-			break;
-		case 8:
-			if (!extractValue(tree,i,value)) {
-				valid = false;
-				return tree;
-			}
-			tree["VALUES"] += value;
-			break;
-		case 14:
-			if (!extractValue(tree, i, value)) {
-				valid = false;
-				return tree;
-			}
-			tree["CONDITION"] += value;
 			break;
 		case 12:
 		case 13:
@@ -67,10 +55,9 @@ MMap<string, string> Parser::parse_tree()
 		default:
 			break;
 		}
+		valid = table[rowIndex][0];
 		rowIndex = table[rowIndex][colIndex];
-		//valid = table[rowIndex][0];
 	}
-	if (tree["TABLE_NAME"].size() == 0)valid = false;
 	return tree;
 }
 
@@ -100,6 +87,9 @@ void Parser::makeTable()
 	init_table(table);
 
 	mark_success(table, 3);
+	mark_success(table, 6);
+	mark_success(table, 9);
+	mark_success(table, 13);
 
 	mark_cell(0, table, 1, 1);
 	mark_cell(0, table, 10, 1);
@@ -196,25 +186,4 @@ string Parser::toLower(const string& input)
 Keyword Parser::stringToKey(const string& word)
 {
 	return indexMap.contains(word) ? indexMap[word] : SYMOBL;
-}
-
-bool Parser::extractValue(MMap<string, string>& tree, int& index,string& value)
-{
-	bool valid = false;
-	int stopIndex = index;
-	for (int i = index+1; i < input_q.size(); i++) {
-		if (input_q[i] == "\"") {
-			stopIndex = i ;
-			valid = true;
-			break;
-		}
-	}
-	if (valid == false) return false;
-	value.clear();
-	for (int i = index+1; i <stopIndex; i++) {
-		value += input_q[i];
-		if(i+1!=stopIndex) value += " ";
-	}
-	index = stopIndex;
-	return true;
 }

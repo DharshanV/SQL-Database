@@ -23,7 +23,6 @@ private:
 	void makeIndexes();
 	string toLower(const string& input);
 	Keyword stringToKey(const string& word);
-	bool extractValue(MMap<string,string>& tree, int& index,string& value);
 private:
 	bool valid;
 	vector<string> input_q;
