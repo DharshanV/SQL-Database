@@ -19,7 +19,6 @@ public:
 	Table();
 	Table(const string& tableName);
 	Table(const string& tableName, const vector<string>& fields);
-	Table(const string& tableName, const vector<string>& fields,const vector<long>& recNo);
 	Table& operator=(const Table& other) {
 		tableName = other.tableName;
 		fields = other.fields;
@@ -31,12 +30,12 @@ public:
 	void create();
 	void open();
 	void insert(const vector<string>& data);
-	void selectAll();
-	void select(const vector<string>& fields);
-	void selectCondition(const vector<string>& condition);
+	Table selectAll();
+	Table select(const vector<string>& fields);
+	Table selectCondition(const vector<string>& condition);
 	void reIndex();
 	friend ostream& operator<<(ostream& outs, const Table& print_me) {
-
+		print_me.print(outs);
 		return outs;
 	}
 private:
@@ -47,6 +46,7 @@ private:
 	Keyword getType(const string& value);
 	vector<long> getLower(vector<string>& commands,bool equal);
 	vector<long> getUpper(vector<string>& commands, bool equal);
+	void print(ostream& outs) const;
 private:
 	string tableName;
 	vector<long> recNo;
@@ -55,6 +55,7 @@ private:
 	Map<string, int> fieldIndex;
 	const string fieldExt = "_fields.txt";
 	const string binaryExt = "_tbl.bin";
+	static int fileCount;
 };
 #endif // !TABLE_H
 

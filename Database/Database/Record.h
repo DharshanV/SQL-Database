@@ -17,6 +17,7 @@ public:
 	long read(fstream& ins, long recno);
 	friend ostream& operator<<(ostream& outs,
 		const Record& r);
+	vector<string> getVec(int size);
 	int recno;
 	int recCount;
 	char buffer[R_MAX_ROW][R_MAX_COL];

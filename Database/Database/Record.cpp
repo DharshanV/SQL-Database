@@ -34,6 +34,15 @@ long Record::read(fstream& ins, long recno)
 	return ins.gcount();
 }
 
+vector<string> Record::getVec(int size)
+{
+	vector<string> temp;
+	for (int i = 0; i < size; i++) {
+		temp.push_back(string(buffer[i]));
+	}
+	return temp;
+}
+
 bool file_exists(const char filename[])
 {
 	const bool debug = false;

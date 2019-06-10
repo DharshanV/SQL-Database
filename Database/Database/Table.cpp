@@ -1,4 +1,5 @@
 #include "Table.h"
+int Table::fileCount = 0;
 
 Table::Table()
 {
@@ -6,26 +7,16 @@ Table::Table()
 
 Table::Table(const string& tableName)
 {
-	this->tableName += "Data\\";
-	this->tableName += tableName;
+	this->tableName = tableName;
 	open();
 }
 
 Table::Table(const string& tableName, const vector<string>& fields)
 {
-	this->tableName += "Data\\";
-	this->tableName += tableName;
+	this->tableName = tableName;
 	this->fields = fields;
 	open();
 	create();
-}
-
-Table::Table(const string& tableName, const vector<string>& fields, const vector<long>& recNo)
-{
-	this->tableName += "Data\\";
-	this->tableName += tableName;
-	this->fields = fields;
-	this->recNo = recNo;
 }
 
 
@@ -36,7 +27,7 @@ Table::~Table()
 void Table::create()
 {
 	fstream f;
-	open_fileRW(f, (tableName + fieldExt).c_str());
+	open_fileRW(f, ("Data\\" + tableName + fieldExt).c_str());
 	if (f.fail()) cout << "failed to open file" << endl;
 	string output;
 	for (int i = 0; i < fields.size(); i++) {
@@ -52,17 +43,17 @@ void Table::create()
 void Table::open()
 {
 	fstream f;
-	open_fileRW(f, (tableName + binaryExt).c_str());
+	open_fileRW(f, ("Data\\" + tableName + binaryExt).c_str());
 	f.close();
 	f = fstream();
-	open_fileRW(f, (tableName + fieldExt).c_str());
+	open_fileRW(f, ("Data\\" + tableName + fieldExt).c_str());
 	f.close();
 }
 
 void Table::insert(const vector<string>& data)
 {
 	fstream f;
-	string name = tableName + binaryExt;
+	string name = "Data\\" + tableName + binaryExt;
 	open_fileRW(f, name.c_str());
 	Record r(data);
 	long fileIndex = r.write(f);
@@ -71,44 +62,43 @@ void Table::insert(const vector<string>& data)
 	}
 }
 
-void Table::selectAll()
+Table Table::selectAll()
 {
-	select(fields);
+	return select(fields);
 }
 
-void Table::select(const vector<string>& fields)
+Table Table::select(const vector<string>& fields)
 {
-	cout << setw(SETW) << std::left << " ";
-	for (int i = 0; i < fields.size(); i++) {
-		cout << setw(SETW) << std::left << fields[i];
-	}
-	cout << endl;
 	fstream f;
-	open_fileRW(f, (tableName + binaryExt).c_str());
-	if (f.fail()) return;
+	open_fileRW(f, ("Data\\" + tableName + binaryExt).c_str());
+	if (f.fail()) return Table();
+	string ext;
+	for (int i = 0; i < fields.size(); i++) {
+		ext += fields[i];
+	}
+	Table t(tableName + "_select" + to_string(fileCount),fields);
+	fileCount++;
 	Record r;
 	int recordNo = 0;
 	while (f.good()) {
+		vector<string> temp;
 		r.read(f, recordNo);
 		if (f.eof())break;
-		cout << setw(15) << std::left << string("Rec No "+to_string(recordNo)+":");
 		for (int i = 0; i < fields.size(); i++) {
 			int fieldI = fieldIndex[fields[i]];
-			cout << setw(SETW)<<std::left<< r.buffer[fieldI];
+			temp += string(r.buffer[fieldI]);
 		}
-		cout << endl;
+		t.insert(temp);
 		recordNo++;
 	}
 	f.close();
+	cout << t << endl;
+	return t;
 }
 
-void Table::selectCondition(const vector<string>& condition) {
-	cout << setw(SETW) << std::left << " ";
-	for (int i = 0; i < fields.size(); i++) {
-		cout << setw(SETW) << std::left << fields[i];
-	}
-	cout << endl;
-
+Table Table::selectCondition(const vector<string>& condition) {
+	Table t(tableName + "_select"+to_string(fileCount), fields);
+	fileCount++;
 	Queue<string> shantingYard = getShantingYard(condition);
 	Stack<vector<long> > recordIndices;
 	vector<string> commands;
@@ -150,18 +140,20 @@ void Table::selectCondition(const vector<string>& condition) {
 	}
 	vector<Record> records = getRecords(recordIndices.pop());
 	for (int j = 0; j < records.size(); j++) {
-		cout << setw(SETW) << std::left << string("Rec No " + to_string(j) + ":");
+		vector<string> temp;
 		for (int k = 0; k < fields.size(); k++) {
-			cout << setw(SETW) << std::left << records[j].buffer[k];
+			temp += string(records[j].buffer[k]);
 		}
-		cout << endl;
+		t.insert(temp);
 	}
+	cout << t << endl;
+	return t;
 }
 
 void Table::reIndex()
 {
 	fstream f;
-	open_fileRW(f, (tableName + binaryExt).c_str());
+	open_fileRW(f, ("Data\\" + tableName + binaryExt).c_str());
 	long recIndex = 0;
 	while (f.good()) {
 		Record r;
@@ -180,7 +172,7 @@ vector<Record> Table::getRecords(const vector<long>& recordIndex)
 	fstream f;
 	vector<Record> records;
 
-	open_fileRW(f, (tableName + binaryExt).c_str());
+	open_fileRW(f, ("Data\\" + tableName + binaryExt).c_str());
 
 	for (int i = 0; i < recordIndex.size(); i++) {
 		Record r;
@@ -281,6 +273,32 @@ vector<long> Table::getUpper(vector<string>& commands, bool equal)
 	}
 	commands.clear();
 	return temp;
+}
+
+void Table::print(ostream & outs) const
+{
+	cout << setw(SETW) << std::left << " ";
+	for (int i = 0; i < fields.size(); i++) {
+		cout << setw(SETW) << std::left << fields[i];
+	}
+	cout << endl;
+	fstream f;
+	open_fileRW(f, ("Data\\"+tableName + binaryExt).c_str());
+	if (f.fail()) return;
+	int recordNo = 0;
+	Record r;
+	while (f.good()) {
+		r.read(f, recordNo);
+		if (f.eof())break;
+		cout << setw(15) << std::left << string("Rec No " + to_string(recordNo) + ":");
+		for (int i = 0; i < fields.size(); i++) {
+			int fieldI = fieldIndex[fields[i]];
+			cout << setw(SETW) << std::left << r.buffer[fieldI];
+		}
+		cout << endl;
+		recordNo++;
+	}
+	f.close();
 }
 
 vector<long> Table::intersection(vector<long> left, vector<long> right) {
