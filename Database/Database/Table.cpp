@@ -19,9 +19,12 @@ Table::Table(const string& tableName, const vector<string>& fields)
 	create();
 }
 
-
-Table::~Table()
-{
+Table& Table::operator=(const Table& other) {
+	tableName = other.tableName;
+	fields = other.fields;
+	indices = other.indices;
+	fieldIndex = other.fieldIndex;
+	return *this;
 }
 
 void Table::create()

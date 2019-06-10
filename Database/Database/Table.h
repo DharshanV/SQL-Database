@@ -19,34 +19,30 @@ public:
 	Table();
 	Table(const string& tableName);
 	Table(const string& tableName, const vector<string>& fields);
-	Table& operator=(const Table& other) {
-		tableName = other.tableName;
-		fields = other.fields;
-		indices = other.indices;
-		fieldIndex = other.fieldIndex;
-		return *this;
-	}
-	~Table();
+	Table& operator=(const Table& other);
+
 	void create();
 	void open();
+	void reIndex();
+
 	void insert(const vector<string>& data);
 	Table selectAll();
 	Table select(const vector<string>& fields);
 	Table selectCondition(const vector<string>& condition);
-	void reIndex();
+
 	friend ostream& operator<<(ostream& outs, const Table& print_me) {
 		print_me.print(outs);
 		return outs;
 	}
 private:
+	void print(ostream& outs) const;
+	Keyword getType(const string& value);
 	vector<Record> getRecords(const vector<long>& recordIndex);
 	vector<long> intersection(vector<long> left,vector<long> right);
 	vector<long> _union(vector<long> left, vector<long> right);
 	Queue<string> getShantingYard(const vector<string>& condition);
-	Keyword getType(const string& value);
 	vector<long> getLower(vector<string>& commands,bool equal);
 	vector<long> getUpper(vector<string>& commands, bool equal);
-	void print(ostream& outs) const;
 private:
 	string tableName;
 	vector<long> recNo;

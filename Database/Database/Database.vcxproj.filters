@@ -112,24 +112,6 @@
     <Text Include="inputs.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="inputs2.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="inputs3.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="sqlTest2.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="sqlTest.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="sqlTest3.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="myTest.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
     <Text Include="invalid.txt">
       <Filter>Resource Files</Filter>
     </Text>

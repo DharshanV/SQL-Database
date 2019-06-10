@@ -10,10 +10,6 @@ Parser::Parser(const string& input)
 	makeQueue(input);
 }
 
-Parser::~Parser()
-{
-}
-
 MMap<string, string> Parser::parse_tree()
 {
 	MMap<string, string> tree;

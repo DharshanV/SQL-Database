@@ -13,7 +13,6 @@ class Parser
 {
 public:
 	Parser(const string& input);
-	~Parser();
 	MMap<string, string> parse_tree();
 	Keyword commandType();
 	bool isValid();
