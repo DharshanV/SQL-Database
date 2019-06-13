@@ -159,7 +159,6 @@ void SQL::insertTable(cstring tableName,cvstring value)
 		return;
 	}
 	tables[tableName].insert(value);
-	//tables[tableName].selectAll();
 }
 
 void SQL::selectTable(cstring tableName,cvstring fields,cvstring condition)
@@ -177,7 +176,7 @@ void SQL::selectTable(cstring tableName,cvstring fields,cvstring condition)
 			tables[tableName].selectCondition(condition);
 		}
 		else {
-
+			tables[tableName].selectFieldAndCon(fields, condition);
 		}
 	}
 

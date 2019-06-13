@@ -75,12 +75,7 @@ Table Table::select(const vector<string>& fields)
 	fstream f;
 	open_fileRW(f, ("Data\\" + tableName + binaryExt).c_str());
 	if (f.fail()) return Table();
-	string ext;
-	for (int i = 0; i < fields.size(); i++) {
-		ext += fields[i];
-	}
-	Table t(tableName + "_select" + to_string(fileCount),fields);
-	fileCount++;
+	Table t(tableName + "_select" + to_string(fileCount++),fields);
 	Record r;
 	int recordNo = 0;
 	while (f.good()) {
@@ -100,52 +95,29 @@ Table Table::select(const vector<string>& fields)
 }
 
 Table Table::selectCondition(const vector<string>& condition) {
-	Table t(tableName + "_select"+to_string(fileCount), fields);
-	fileCount++;
-	Queue<string> shantingYard = getShantingYard(condition);
-	Stack<vector<long> > recordIndices;
-	vector<string> commands;
-	while (!shantingYard.empty()) {
-		if (shantingYard.front() == "=") {
-			recordIndices += indices[commands[0]][commands[1]];
-			shantingYard.pop();
-			commands.clear();
-		}
-		else if (shantingYard.front() == "<") {
-			recordIndices += getLower(commands,false);
-			shantingYard.pop();
-		}
-		else if (shantingYard.front() == "<=") {
-			recordIndices += getLower(commands, true);;
-			shantingYard.pop();
-		}
-		else if (shantingYard.front() == ">") {
-			recordIndices += getUpper(commands,false);
-			shantingYard.pop();
-		}
-		else if (shantingYard.front() == ">=") {
-			recordIndices += getUpper(commands, true);
-			shantingYard.pop();
-		}
-		else if (shantingYard.front() == "and") {
-			recordIndices += intersection(recordIndices.pop(), recordIndices.pop());
-			shantingYard.pop();
-			commands.clear();
-		}
-		else if (shantingYard.front() == "or") {
-			recordIndices += _union(recordIndices.pop(), recordIndices.pop());
-			shantingYard.pop();
-			commands.clear();
-		}
-		else {
-			commands += shantingYard.pop();
-		}
-	}
-	vector<Record> records = getRecords(recordIndices.pop());
+	Table t(tableName + "_select"+to_string(fileCount++), fields);
+	vector<Record> records = getRecords(getRecIndices(condition));
 	for (int j = 0; j < records.size(); j++) {
 		vector<string> temp;
 		for (int k = 0; k < fields.size(); k++) {
 			temp += string(records[j].buffer[k]);
+		}
+		t.insert(temp);
+	}
+	cout << t << endl;
+	return t;
+}
+
+Table Table::selectFieldAndCon(const vector<string>& fields,
+							const vector<string>& condition)
+{
+	Table t(tableName + "_select" + to_string(fileCount++), fields);
+	vector<Record> records = getRecords(getRecIndices(condition));
+	for (int j = 0; j < records.size(); j++) {
+		vector<string> temp;
+		for (int i = 0; i < fields.size(); i++) {
+			int fieldI = fieldIndex[fields[i]];
+			temp += string(records[j].buffer[fieldI]);
 		}
 		t.insert(temp);
 	}
@@ -276,6 +248,50 @@ vector<long> Table::getUpper(vector<string>& commands, bool equal)
 	}
 	commands.clear();
 	return temp;
+}
+
+vector<long> Table::getRecIndices(const vector<string>& condition)
+{
+	Queue<string> shantingYard = getShantingYard(condition);
+	Stack<vector<long> > recordIndices;
+	vector<string> commands;
+	while (!shantingYard.empty()) {
+		if (shantingYard.front() == "=") {
+			recordIndices += indices[commands[0]][commands[1]];
+			shantingYard.pop();
+			commands.clear();
+		}
+		else if (shantingYard.front() == "<") {
+			recordIndices += getLower(commands, false);
+			shantingYard.pop();
+		}
+		else if (shantingYard.front() == "<=") {
+			recordIndices += getLower(commands, true);;
+			shantingYard.pop();
+		}
+		else if (shantingYard.front() == ">") {
+			recordIndices += getUpper(commands, false);
+			shantingYard.pop();
+		}
+		else if (shantingYard.front() == ">=") {
+			recordIndices += getUpper(commands, true);
+			shantingYard.pop();
+		}
+		else if (shantingYard.front() == "and") {
+			recordIndices += intersection(recordIndices.pop(), recordIndices.pop());
+			shantingYard.pop();
+			commands.clear();
+		}
+		else if (shantingYard.front() == "or") {
+			recordIndices += _union(recordIndices.pop(), recordIndices.pop());
+			shantingYard.pop();
+			commands.clear();
+		}
+		else {
+			commands += shantingYard.pop();
+		}
+	}
+	return recordIndices.pop();
 }
 
 void Table::print(ostream & outs) const

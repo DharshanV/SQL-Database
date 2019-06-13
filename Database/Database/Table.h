@@ -29,7 +29,8 @@ public:
 	Table selectAll();
 	Table select(const vector<string>& fields);
 	Table selectCondition(const vector<string>& condition);
-
+	Table selectFieldAndCon(const vector<string>& fields,
+							const vector<string>& condition);
 	friend ostream& operator<<(ostream& outs, const Table& print_me) {
 		print_me.print(outs);
 		return outs;
@@ -38,11 +39,12 @@ private:
 	void print(ostream& outs) const;
 	Keyword getType(const string& value);
 	vector<Record> getRecords(const vector<long>& recordIndex);
+	Queue<string> getShantingYard(const vector<string>& condition);
 	vector<long> intersection(vector<long> left,vector<long> right);
 	vector<long> _union(vector<long> left, vector<long> right);
-	Queue<string> getShantingYard(const vector<string>& condition);
 	vector<long> getLower(vector<string>& commands,bool equal);
 	vector<long> getUpper(vector<string>& commands, bool equal);
+	vector<long> getRecIndices(const vector<string>& condition);
 private:
 	string tableName;
 	vector<long> recNo;
