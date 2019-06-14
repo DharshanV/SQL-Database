@@ -75,7 +75,7 @@ Table Table::select(const vector<string>& fields)
 	fstream f;
 	open_fileRW(f, ("Data\\" + tableName + binaryExt).c_str());
 	if (f.fail()) return Table();
-	Table t(tableName + "_select" + to_string(fileCount++),fields);
+	Table t("select" + to_string(fileCount++),fields);
 	Record r;
 	int recordNo = 0;
 	while (f.good()) {
@@ -95,7 +95,7 @@ Table Table::select(const vector<string>& fields)
 }
 
 Table Table::selectCondition(const vector<string>& condition) {
-	Table t(tableName + "_select"+to_string(fileCount++), fields);
+	Table t("select"+to_string(fileCount++), fields);
 	vector<Record> records = getRecords(getRecIndices(condition));
 	for (int j = 0; j < records.size(); j++) {
 		vector<string> temp;
@@ -111,7 +111,7 @@ Table Table::selectCondition(const vector<string>& condition) {
 Table Table::selectFieldAndCon(const vector<string>& fields,
 							const vector<string>& condition)
 {
-	Table t(tableName + "_select" + to_string(fileCount++), fields);
+	Table t("select" + to_string(fileCount++), fields);
 	vector<Record> records = getRecords(getRecIndices(condition));
 	for (int j = 0; j < records.size(); j++) {
 		vector<string> temp;

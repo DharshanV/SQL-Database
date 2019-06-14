@@ -23,6 +23,7 @@ private:
 	void getInput(string& input,bool& quit);
 	void printHelp();
 	void saveTables();
+	void removeAllSelect();
 	void loadPreviosSessions();
 	bool hasPreviousSessions();
 	bool executeCommand(cstring command);
