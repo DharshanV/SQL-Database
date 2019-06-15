@@ -53,7 +53,6 @@ void SQL::run(const char* fileName)
 void SQL::quit()
 {
 	saveTables();
-	removeAllSelect();
 }
 
 void SQL::printHelp()
@@ -191,21 +190,4 @@ void SQL::saveTables()
 		out << (*it).key << endl;
 	}
 	out.close();
-}
-
-void SQL::removeAllSelect() {
-	bool valid = true;
-	int i = 0;
-	while (valid) {
-		string fileName = "Data\\select" + to_string(i);
-		ifstream in(string(fileName + "_fields.txt"));
-		if (!in.is_open()) {
-			valid = false;
-			break;
-		}
-		in.close();
-		remove(string(fileName + "_fields.txt").c_str());
-		remove(string(fileName + "_tbl.bin").c_str());
-		i++;
-	}
 }

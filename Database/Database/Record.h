@@ -13,8 +13,8 @@ public:
 		recCount = 0;
 	}
 	Record(const vector<string>& data);
-	long write(fstream& outs);
-	long read(fstream& ins, long recno);
+	long write(fstream& outs);							//Write the current buffer data into open file
+	long read(fstream& ins, long recno);				//Reads a specific record from the file
 	friend ostream& operator<<(ostream& outs,
 		const Record& r);
 	vector<string> getVec(int size);

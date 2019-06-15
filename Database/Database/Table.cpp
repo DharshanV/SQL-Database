@@ -91,6 +91,7 @@ Table Table::select(const vector<string>& fields)
 	}
 	f.close();
 	cout << t << endl;
+	t.drop();
 	return t;
 }
 
@@ -105,6 +106,7 @@ Table Table::selectCondition(const vector<string>& condition) {
 		t.insert(temp);
 	}
 	cout << t << endl;
+	t.drop();
 	return t;
 }
 
@@ -122,6 +124,7 @@ Table Table::selectFieldAndCon(const vector<string>& fields,
 		t.insert(temp);
 	}
 	cout << t << endl;
+	t.drop();
 	return t;
 }
 
@@ -140,6 +143,12 @@ void Table::reIndex()
 		}
 		recIndex++;
 	}
+}
+
+void Table::drop()
+{
+	remove(string("Data\\" + tableName + binaryExt).c_str());
+	remove(string("Data\\" + tableName + fieldExt).c_str());
 }
 
 vector<Record> Table::getRecords(const vector<long>& recordIndex)

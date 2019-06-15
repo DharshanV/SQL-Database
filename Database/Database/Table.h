@@ -24,7 +24,7 @@ public:
 	void create();
 	void open();
 	void reIndex();
-
+	void drop();
 	void insert(const vector<string>& data);
 	Table selectAll();
 	Table select(const vector<string>& fields);
