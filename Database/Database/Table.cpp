@@ -275,7 +275,7 @@ vector<long> Table::getRecIndices(const vector<string>& condition)
 			shantingYard.pop();
 		}
 		else if (shantingYard.front() == "<=") {
-			recordIndices += getLower(commands, true);
+			recordIndices += getLower(commands, true);;
 			shantingYard.pop();
 		}
 		else if (shantingYard.front() == ">") {

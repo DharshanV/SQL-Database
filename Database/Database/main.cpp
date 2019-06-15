@@ -2,6 +2,6 @@
 
 int main() {
 	SQL sql;
-	sql.run();
+	sql.run("inputs.txt");
 	return 0;
 }
