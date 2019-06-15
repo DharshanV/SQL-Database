@@ -29,6 +29,7 @@ Table& Table::operator=(const Table& other) {
 
 void Table::create()
 {
+	//using the text file to store a table fields
 	fstream f;
 	open_fileRW(f, ("Data\\" + tableName + fieldExt).c_str());
 	if (f.fail()) cout << "failed to open file" << endl;
@@ -45,6 +46,7 @@ void Table::create()
 
 void Table::open()
 {
+	//create the bin and text file that is used for resession
 	fstream f;
 	open_fileRW(f, ("Data\\" + tableName + binaryExt).c_str());
 	f.close();
@@ -55,6 +57,8 @@ void Table::open()
 
 void Table::insert(const vector<string>& data)
 {
+	//save the data into the bin file (calling record write)
+	//but also index its values into the map for selecting
 	fstream f;
 	string name = "Data\\" + tableName + binaryExt;
 	open_fileRW(f, name.c_str());
@@ -72,9 +76,13 @@ Table Table::selectAll()
 
 Table Table::select(const vector<string>& fields)
 {
+	//Look through the entire bin file, and select only
+	//the necessary ones. This does not contain where
+	//conditions. But only fields such as lname...
 	fstream f;
 	open_fileRW(f, ("Data\\" + tableName + binaryExt).c_str());
 	if (f.fail()) return Table();
+	//Temporary table to create bin and txt file of the selected request
 	Table t("select" + to_string(fileCount++),fields);
 	Record r;
 	int recordNo = 0;
@@ -83,6 +91,8 @@ Table Table::select(const vector<string>& fields)
 		r.read(f, recordNo);
 		if (f.eof())break;
 		for (int i = 0; i < fields.size(); i++) {
+			//mapping from string to index inorder
+			//to get the specific data from the record
 			int fieldI = fieldIndex[fields[i]];
 			temp += string(r.buffer[fieldI]);
 		}
@@ -91,12 +101,15 @@ Table Table::select(const vector<string>& fields)
 	}
 	f.close();
 	cout << t << endl;
-	t.drop();
+	t.drop();			//droping or deleting the temp created files
 	return t;
 }
 
 Table Table::selectCondition(const vector<string>& condition) {
+	//selecting based on only the condition, and all the fields
 	Table t("select"+to_string(fileCount++), fields);
+	//we need to do shuntingyard because the order of "and" and "or"
+	//execution matters
 	vector<Record> records = getRecords(getRecIndices(condition));
 	for (int j = 0; j < records.size(); j++) {
 		vector<string> temp;
@@ -113,6 +126,7 @@ Table Table::selectCondition(const vector<string>& condition) {
 Table Table::selectFieldAndCon(const vector<string>& fields,
 							const vector<string>& condition)
 {
+	//selection based on both the fields and condition
 	Table t("select" + to_string(fileCount++), fields);
 	vector<Record> records = getRecords(getRecIndices(condition));
 	for (int j = 0; j < records.size(); j++) {
@@ -130,6 +144,9 @@ Table Table::selectFieldAndCon(const vector<string>& fields,
 
 void Table::reIndex()
 {
+	//we have to reindex because if we had previous data,
+	//we need to know where they are in order to select 
+	//them again
 	fstream f;
 	open_fileRW(f, ("Data\\" + tableName + binaryExt).c_str());
 	long recIndex = 0;
@@ -153,17 +170,16 @@ void Table::drop()
 
 vector<Record> Table::getRecords(const vector<long>& recordIndex)
 {
+	//given a list of rec index, get all the records associated
+	//with that index
 	fstream f;
 	vector<Record> records;
-
 	open_fileRW(f, ("Data\\" + tableName + binaryExt).c_str());
-
 	for (int i = 0; i < recordIndex.size(); i++) {
 		Record r;
 		r.read(f, recordIndex[i]);
 		records += r;
 	}
-
 	f.close();
 	return records;
 }
@@ -228,6 +244,10 @@ Keyword Table::getType(const string& value)
 
 vector<long> Table::getLower(vector<string>& commands, bool equal)
 {
+	//if !equal and we find it, then we need the next one
+	//if !equal and we dont find it, then map.find will return a the current it
+	//if equal and we dont find it, then it is fine
+	//if equal and we find it, then its fine
 	vector<long> temp;
 	MMap<string, long>* map = &(indices[commands[0]]);
 	MMap<string, long>::Iterator it = map->begin();
@@ -245,6 +265,10 @@ vector<long> Table::getLower(vector<string>& commands, bool equal)
 
 vector<long> Table::getUpper(vector<string>& commands, bool equal)
 {
+	//if !equal and we find it, then we need the next one
+	//if !equal and we dont find it, then map.find will return a the current it
+	//if equal and we dont find it, then it is fine
+	//if equal and we find it, then its fine
 	vector<long> temp;
 	MMap<string, long>* map = &(indices[commands[0]]);
 	MMap<string, long>::Iterator start = map->find(commands[1]);

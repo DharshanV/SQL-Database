@@ -80,6 +80,7 @@ bool Parser::isValid()
 
 void Parser::makeTable()
 {
+	//state machine
 	init_table(table);
 
 	mark_success(table, 3);
@@ -136,6 +137,7 @@ void Parser::makeTable()
 
 void Parser::makeQueue(const string& input)
 {
+	//tokenize the given command into tokens
 	STokenizer st(input);
 	Token t;
 	while (!st.done()) {
@@ -181,5 +183,6 @@ string Parser::toLower(const string& input)
 
 Keyword Parser::stringToKey(const string& word)
 {
+	//everything that is unknown is a symbol
 	return indexMap.contains(word) ? indexMap[word] : SYMOBL;
 }
